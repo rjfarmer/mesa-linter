@@ -1,4 +1,4 @@
-from future import print_function
+from __future__ import print_function
 
 import sys
 import os
@@ -7,7 +7,7 @@ import re
 def search(filename,checks):
     with open(str(filename),'r') as f:
         for ldx,line in enumerate(f):
-            if line.startswith('!') or line.startswith('c '):
+            if line.startswith('!') or line.startswith('c ') or line.startswith('C '):
                 # Skip comment lines
                 continue
             for c in checks:
@@ -62,7 +62,7 @@ def check_real_exp(line):
     
 def check_real_d(line):
     # Look for 1.5 but not 1.5d0
-    if (re.search("([0-9]\.[0-9]+)(?!d)", line) and re.search("([0-9]\.[0-9]+)(?!_)", line)) or (re.search("([0-9]\.\s)", line):
+    if (re.search("([0-9]\.[0-9]+)(?!d)", line) and re.search("([0-9]\.[0-9]+)(?!_)", line)) or (re.search("([0-9]\.\s)", line)):
         return "Missing D on float"
     return None
     
