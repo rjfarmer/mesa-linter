@@ -1,3 +1,5 @@
+from future import print_function
+
 import sys
 import os
 import re
@@ -9,10 +11,14 @@ def search(filename,checks):
                 # Skip comment lines
                 continue
             for c in checks:
-                x = c(line)
+                if '!' in line:
+                    l = line[:line.index('!')]
+                else:
+                    l = line
+                x = c(l)
                 if x is not None:
                     print(line.strip())
-                    print(str(filename),"Line:",str(ldx),x)
+                    print(str(filename),":",str(ldx),":",x)
                     print()
     
 def check_float(line):
@@ -58,6 +64,12 @@ def check_real_d(line):
     # Look for 1.5 but not 1.5d0
     if re.search("([0-9]\.[0-9]+)(?!d)", line):
         return "Missing D on float"
+    return None
+    
+def check_real(line):
+    # Look for declaring things real and not real(dp)
+    if 'real ' in line or 'real,' in line:
+        return "Declared real use real(dp) instead"
     return None
 
 allchecks = [check_float,check_crlibm,check_pow,check_real_op,check_real_exp,check_real_d] 
