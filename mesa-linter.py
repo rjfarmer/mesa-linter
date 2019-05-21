@@ -73,8 +73,13 @@ def check_real(line):
     if 'real ' in line or 'real,' in line:
         return "Declared real use real(dp) instead"
     return None
+    
+def check_stop(line):
+    if 'stop ' in line:
+        return "stop detected maybe use: call mesa_error(__FILE__,__LINE__) instead?"
+    return None
 
-allchecks = [check_float,check_crlibm,check_pow,check_real_op,check_real_exp,check_real_d] 
+allchecks = [check_float,check_crlibm,check_pow,check_real_op,check_real_exp,check_real_d,check_stop] 
 
 if __name__ == "__main__":
     for f in sys.argv[1:]:
