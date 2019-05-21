@@ -7,7 +7,7 @@ import re
 def search(filename,checks):
     with open(str(filename),'r') as f:
         for ldx,line in enumerate(f):
-            if line.startswith('!') or line.startswith('c ') or line.startswith('C '):
+            if any(line.startswith(i) for i in ['!','c ','C ','* ']):
                 # Skip comment lines
                 continue
             for c in checks:
