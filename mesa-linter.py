@@ -84,8 +84,13 @@ def check_stop(line):
     if re.search("stop\ [0-9]", line):
         return "stop detected maybe use: call mesa_error(__FILE__,__LINE__) instead?"
     return None
+    
+def check_omp_critical(line):
+    if 'omp' in line and 'critical' in line and 'critical (' not in line:
+        return 'Unnamed omp critical block'
+    return None
 
-allchecks = [check_float,check_crlibm,check_pow,check_real_op,check_real_exp,check_real_d,check_stop] 
+allchecks = [check_float,check_crlibm,check_pow,check_real_op,check_real_exp,check_real_d,check_stop,check_omp_critical] 
 
 if __name__ == "__main__":
     files = sys.argv[1:]
