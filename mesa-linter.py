@@ -8,11 +8,11 @@ def search(filename,checks,summary=False):
     count = 0
     with open(str(filename),'r') as f:
         for ldx,line in enumerate(f):
-            if any(line.startswith(i) for i in ['!','c ','C ','* ']):
+            if any(line.startswith(i) for i in ['! ','c ','C ','* ']):
                 # Skip comment lines
                 continue
             for c in checks:
-                if '!' in line:
+                if '!' in line and not '!$' in line:
                     l = line[:line.index('!')]
                 else:
                     l = line
@@ -86,11 +86,17 @@ def check_stop(line):
     return None
     
 def check_omp_critical(line):
-    if 'omp' in line and 'critical' in line and 'critical (' not in line:
+    if '!$omp' in line and 'critical' in line and '(' not in line and 'end' not in line:
         return 'Unnamed omp critical block'
     return None
+    
+def check_dp(line):
+    if 'double precision' in line:
+        return "Found double precision use real(dp) instead"
+    return None
 
-allchecks = [check_float,check_crlibm,check_pow,check_real_op,check_real_exp,check_real_d,check_stop,check_omp_critical] 
+
+allchecks = [check_float,check_crlibm,check_pow,check_real_op,check_real_exp,check_real_d,check_stop,check_omp_critical,check_dp] 
 
 if __name__ == "__main__":
     files = sys.argv[1:]
