@@ -56,7 +56,7 @@ def check_real_op(line):
     
 def check_real_exp(line):
     # Look for 1e+1, 1e-1, 1e1
-    if re.search("[0-9][eE][+]?[-]?[0-9]", line):
+    if re.search("[0-9][eE][+]?[-]?[0-9]", line) and 'write' not in line and 'format(' not in line:
         return "Found use of exponent E, use D instead"
     return None
     
@@ -75,7 +75,7 @@ def check_real(line):
     return None
     
 def check_stop(line):
-    if 'stop ' in line:
+    if re.search("stop\ [0-9]", line):
         return "stop detected maybe use: call mesa_error(__FILE__,__LINE__) instead?"
     return None
 
