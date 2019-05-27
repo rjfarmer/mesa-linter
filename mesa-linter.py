@@ -4,7 +4,8 @@ import sys
 import os
 import re
     
-def search(filename,checks):
+def search(filename,checks,summary=False):
+    count = 0
     with open(str(filename),'r') as f:
         for ldx,line in enumerate(f):
             if any(line.startswith(i) for i in ['!','c ','C ','* ']):
@@ -15,11 +16,16 @@ def search(filename,checks):
                     l = line[:line.index('!')]
                 else:
                     l = line
-                x = c(l)
+                lcheck=l.lower()
+                x = c(lcheck)
                 if x is not None:
-                    print(line.strip())
-                    print(str(filename),":",str(ldx+1),":",x)
-                    print()
+                    count += 1
+                    if not summary:
+                        print(line.strip())
+                        print(str(filename),":",str(ldx+1),":",x)
+                        print()
+    if summary and count:
+        print(str(filename),"Count:",count)
     
 def check_float(line):
     if 'float(' in line:
@@ -82,5 +88,10 @@ def check_stop(line):
 allchecks = [check_float,check_crlibm,check_pow,check_real_op,check_real_exp,check_real_d,check_stop] 
 
 if __name__ == "__main__":
-    for f in sys.argv[1:]:
-        search(f,allchecks)
+    files = sys.argv[1:]
+    s=False
+    if '-s' in files:
+        s=True
+        files = [i for i in files if not ('-s' in i)]
+    for f in files:
+        search(f,allchecks,s)
