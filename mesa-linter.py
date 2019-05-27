@@ -18,7 +18,7 @@ def search(filename,checks):
                 x = c(l)
                 if x is not None:
                     print(line.strip())
-                    print(str(filename),":",str(ldx),":",x)
+                    print(str(filename),":",str(ldx+1),":",x)
                     print()
     
 def check_float(line):
