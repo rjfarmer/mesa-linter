@@ -66,13 +66,13 @@ def check_real_exp(line):
         return "Found use of exponent E, use D instead"
     return None
     
-# Abit broken at the moment
 def check_real_d(line):
+    # Look for 1.5 but not 1.5d0
+    if 'write' not in line and 'format(' not in line:
+        for i in re.split(' |\+|\-|\=|\*|\/',line): #Split up string into things approximately like a number
+            if len(i) and re.search("\d+[.](?!.*[_Dd]).*", i): # test if missing double precision qualifier
+                return "Missing D on float"
     return None
-    # # Look for 1.5 but not 1.5d0
-    # if re.search("([0-9]\.[0-9]*)(?!(d|D|_)\b)", line):
-        # return "Missing D on float"
-    # return None
     
 def check_real(line):
     # Look for declaring things real and not real(dp)
