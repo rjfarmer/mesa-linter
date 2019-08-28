@@ -94,9 +94,13 @@ def check_dp(line):
     if 'double precision' in line:
         return "Found double precision use real(dp) instead"
     return None
+    
+def check_blank(line):
+    if line.strip() == "write(*,*)" or line.strip() == "write(*,*) ''" or line.strip() == 'write(*,*) ""': # test whole line
+        return "Don't write unformatted blank lines use write(*, '(a)')"
+    return None
 
-
-allchecks = [check_float,check_crlibm,check_pow,check_real_op,check_real_exp,check_real_d,check_stop,check_omp_critical,check_dp] 
+allchecks = [check_float,check_crlibm,check_pow,check_real_op,check_real_exp,check_real_d,check_stop,check_omp_critical,check_dp,check_blank] 
 
 if __name__ == "__main__":
     files = sys.argv[1:]
